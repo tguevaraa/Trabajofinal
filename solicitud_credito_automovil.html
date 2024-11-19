@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de crédito para automóviles</title>
+</head>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f4f4; 
+            color: #333333; 
+            font-family: 'Times New Roman', Times, serif
+        }
+
+        header {
+            background-color: #004d1f;
+            color: #ffffff; 
+            padding: 30px;
+            text-align: center;
+            border-bottom: 4px solid #FFEB3B; 
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #FFEB3B; 
+            color: #004d1f; 
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #f9c20e;
+        }
+
+        input[type="text"], input[type="number"], input[type="password"] {
+            background-color: #ffffff; 
+            border: 2px solid #004d1f; 
+            padding: 12px;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus {
+            border-color: #FFEB3B; 
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #333333; 
+        }
+
+        th {
+            background-color: #004d1f; 
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9; 
+        }
+
+        tr:nth-child(even) {
+            background-color: #e9e9e9; 
+        }
+
+        footer {
+            background-color: #333333; 
+            color: #ffffff; 
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #004d1f; 
+        }
+
+        .form-container hr {
+            border: 0;
+            border-top: 2px solid #004d1f; 
+            margin: 20px 0;
+        }
+
+    </style>
+<body>
+    <header align="center">
+        <img src="https://i.pinimg.com/originals/30/29/51/3029517e824f67d07d86af9bf0b0d795.gif" height="200" alt="">
+        <h2>Solicitud de crédito para automóviles</h2>
+    </header>
+    <main>
+        <table align="center">
+            <tbody>
+                <tr>
+                    <td>Nombre y Apellido:</td>
+                    <td><input type="text" id="nombre"></td>
+                </tr>
+                <tr>
+                    <td>Número de años en su lugar de trabajo:</td>
+                    <td><input type="number" id="anos_trabajados"></td>
+                </tr>
+                <tr>
+                    <td>Sueldo mensual:</td>
+                    <td><input type="number" id="sueldo_mensual"></td>
+                </tr>
+                <tr>
+                    <td>Valor del vehículo:</td>
+                    <td><input type="number" id="valor_credito"></td>
+                </tr>
+                <tr>
+                    <td>Dispone de un aval:</td>
+                    <td><input type="text" id="aval" maxlength="2" placeholder="si o no"></td>
+                </tr>
+                <tr>
+                    <td>Pago mensual del crédito:</td>
+                    <td><input type="number" id="pago_mensual"></td>
+                </tr>
+                <tr>
+                    <td>Puntaje crediticio:</td>
+                    <td><input type="number" id="puntaje_crediticio"></td>
+                </tr>
+                <tr>
+                    <td>Dispone de garantía adicional:</td>
+                    <td><input type="text" id="garantia" maxlength="2" placeholder="si o no"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <button onclick="procesarSolicitud()">Procesar Solicitud</button>
+                        <button onclick="limpiarFormulario()">Limpiar Casillas</button>
+                        <button onclick="finalizarSesion()">Finalizar Sesión</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3 align="center">Listado de Solicitudes</h3>
+        <div id="resumen_solicitudes" align="center"></div>
+    </main>
+    <script>
+        let solicitudes = []; 
+        let continuar = true; 
+    
+        function iniciarProceso() {
+            while (continuar) {
+                procesarSolicitud(); 
+    
+                
+                continuar = confirm("¿Desea procesar otra solicitud?");
+            }
+            finalizarSesion();
+        }
+    
+        function procesarSolicitud() {
+            let solicitud = {
+                nombre: document.getElementById("nombre").value,
+                anos_trabajados: parseInt(document.getElementById("anos_trabajados").value),
+                sueldo_mensual: parseFloat(document.getElementById("sueldo_mensual").value),
+                valor_credito: parseFloat(document.getElementById("valor_credito").value),
+                aval: document.getElementById("aval").value.toLowerCase(),
+                pago_mensual: parseFloat(document.getElementById("pago_mensual").value),
+                puntaje_crediticio: parseInt(document.getElementById("puntaje_crediticio").value),
+                garantia: document.getElementById("garantia").value.toLowerCase(),
+                aprobado: false,
+                condiciones: []
+            };
+    
+            if (solicitud.sueldo_mensual >= 3 * solicitud.pago_mensual) {
+                if (solicitud.puntaje_crediticio < 600) {
+                    if (solicitud.garantia === "si") {
+                        solicitud.aprobado = true;
+                        solicitud.condiciones.push("Garantía adicional requerida");
+                    }
+                } else {
+                    solicitud.aprobado = true;
+                }
+    
+                if (solicitud.valor_credito > 30000 && solicitud.aval === "no") {
+                    solicitud.aprobado = false;
+                    solicitud.condiciones.push("Aval requerido para montos mayores a $30,000");
+                }
+    
+                if (solicitud.anos_trabajados > 2) {
+                    solicitud.condiciones.push("Tasa reducida por antigüedad laboral");
+                }
+            } else {
+                solicitud.condiciones.push("Ingresos insuficientes");
+            }
+
+            solicitud.condiciones.push(`Nombre: ${solicitud.nombre}`);
+            solicitud.condiciones.push(`Años trabajados: ${solicitud.anos_trabajados}`);
+            solicitud.condiciones.push(`Sueldo mensual: $${solicitud.sueldo_mensual}`);
+            solicitud.condiciones.push(`Valor del crédito: $${solicitud.valor_credito}`);
+            solicitud.condiciones.push(`Aval: ${solicitud.aval}`);
+            solicitud.condiciones.push(`Pago mensual: $${solicitud.pago_mensual}`);
+            solicitud.condiciones.push(`Puntaje crediticio: ${solicitud.puntaje_crediticio}`);
+            solicitud.condiciones.push(`Garantía adicional: ${solicitud.garantia}`);
+    
+            solicitudes.push(solicitud);
+
+            mostrarResumen();
+            alert("Solicitud procesada correctamente.");
+            limpiarFormulario();
+        }
+    
+        function limpiarFormulario() {
+            document.getElementById("nombre").value = "";
+            document.getElementById("anos_trabajados").value = "";
+            document.getElementById("sueldo_mensual").value = "";
+            document.getElementById("valor_credito").value = "";
+            document.getElementById("aval").value = "";
+            document.getElementById("pago_mensual").value = "";
+            document.getElementById("puntaje_crediticio").value = "";
+            document.getElementById("garantia").value = "";
+        }
+    
+        function finalizarSesion() {
+            mostrarResumen();
+            alert("Sesión finalizada. No se pueden procesar más solicitudes.");
+
+            document.querySelectorAll("input, button").forEach((element) => {
+                element.disabled = true;
+            });
+        }
+    
+        function mostrarResumen() {
+            let resumen = "<table border='1' align='center'><tr><th>Nombre</th><th>Estado</th><th>Condiciones</th></tr>";
+            solicitudes.forEach((solicitud) => {
+                resumen += `<tr>
+                    <td>${solicitud.nombre}</td>
+                    <td>${solicitud.aprobado ? "Aprobado" : "Denegado"}</td>
+                    <td>${solicitud.condiciones.join("<br>")}</td>
+                </tr>`;
+            });
+            resumen += "</table>";
+            document.getElementById("resumen_solicitudes").innerHTML = resumen;
+        }
+    </script>
+    
+</body>
+</html>
